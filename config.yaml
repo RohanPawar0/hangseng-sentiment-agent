@@ -1,0 +1,70 @@
+# ------------------------------------------------------------------
+# Hang Seng sentiment agent: all settings live here.
+# Adding an exchange (e.g. Korea) = add a block under `exchanges`.
+# ------------------------------------------------------------------
+lookback_days: 10          # social posts + news window (assignment: last 10 days)
+
+exchanges:
+  HK:
+    name: "Hong Kong (HKEX / Hang Seng)"
+    timezone: "Asia/Hong_Kong"   # UTC+8
+    sources: [lihkg, telegram]   # assignment: 2 different sources per exchange
+    tickers:
+      - {symbol: "0700.HK", name: "Tencent",  keywords: ["騰訊", "腾讯", "Tencent", "0700", "00700"]}
+      - {symbol: "9988.HK", name: "Alibaba",  keywords: ["阿里巴巴", "阿里", "Alibaba", "9988", "BABA"]}
+      - {symbol: "0005.HK", name: "HSBC",     keywords: ["滙豐", "匯豐", "汇丰", "HSBC", "0005"]}
+      - {symbol: "3690.HK", name: "Meituan",  keywords: ["美團", "美团", "Meituan", "3690"]}
+      - {symbol: "1810.HK", name: "Xiaomi",   keywords: ["小米", "Xiaomi", "1810"]}
+
+# Optional bonus (the brief also lists Korean sources). Uncomment to enable.
+#  KR:
+#    name: "Korea (KRX)"
+#    timezone: "Asia/Seoul"
+#    sources: [naver, telegram]
+#    tickers:
+#      - {symbol: "005930.KS", name: "Samsung Electronics", keywords: ["삼성전자", "Samsung"]}
+#      - {symbol: "000660.KS", name: "SK Hynix", keywords: ["SK하이닉스", "Hynix"]}
+#      - {symbol: "035420.KS", name: "NAVER", keywords: ["네이버", "NAVER"]}
+#      - {symbol: "005380.KS", name: "Hyundai Motor", keywords: ["현대차", "Hyundai"]}
+#      - {symbol: "035720.KS", name: "Kakao", keywords: ["카카오", "Kakao"]}
+
+apify:
+  # LIHKG forum (Hong Kong). Found in Apify Store on 12 Nov 2026 (last run 11 Nov 2026).
+  lihkg_actor: "claude_code_reviewer/lihkg-scraper-en"
+  lihkg_search_per_keyword: 20     # threads found per keyword (search mode)
+  lihkg_threads_per_ticker: 4      # most active threads we open per ticker
+  lihkg_max_replies: 20           # replies read per thread (each reply costs ~$0.003)
+  lihkg_keywords_per_ticker: 2     # first N keywords from the ticker list are searched
+
+  # Telegram public channels. Most-used Telegram scraper in the Store (1,300+ users).
+  telegram_actor: "automation-lab/telegram-scraper"
+  telegram_max_messages: 700       # per channel ($0.001/message, so ~$1.40 for both)
+  # Public channel usernames WITHOUT "@". Verified at https://t.me/s/<name> on 12 Nov 2026:
+  #   hkej_news        = 信報即時財經 (HKEJ finance feed), ~60 posts/day, mentions 港股/恒指/HK tickers
+  #   FinanceNewsDaily = 華爾街見聞 (Wallstreetcn), 59K subscribers, ~1.6K views/post, ~35 posts/day
+  # Skipped: hket_news (~600 posts/day; 10 days would exceed the free credit).
+  # No public HK *retail chat* channel was found (retail chat is in private groups), so these are
+  # broadcast channels; see README Limitations.
+  telegram_channels: ["hkej_news", "FinanceNewsDaily"]
+
+  # Korea bonus (only used if KR is enabled above)
+  naver_actor: "hgservices/naver-stock-discussion-scraper"
+
+exa:
+  results_per_ticker: 10
+
+sentiment:
+  engine: "auto"    # auto = multilingual transformer if installed, else keyword lexicon
+  model: "cardiffnlp/twitter-xlm-roberta-base-sentiment"
+  bullish_threshold: 0.10
+  bearish_threshold: -0.10
+  social_weight: 0.7   # combined score = 0.7 * social + 0.3 * news
+  news_weight: 0.3
+
+prices:
+  hourly_period: "60d"   # hourly bars (bars before the social window get zero sentiment)
+  daily_period: "6mo"    # daily bars for support/resistance
+
+predict:
+  min_train_fraction: 0.5   # walk-forward: first test point after 50% of bars
+  # ridge_alpha is no longer fixed: predict.py picks it by time-series CV on training data (v2, 12 Nov)

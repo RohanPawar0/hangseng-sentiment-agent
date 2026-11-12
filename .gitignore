@@ -1,0 +1,12 @@
+.env
+.venv/
+venv/
+__pycache__/
+*.pyc
+data/raw/
+.DS_Store
+
+# personal working notes (kept local, not public)
+CLAUDE.md
+EMAIL_DRAFT.md
+START_HERE.md

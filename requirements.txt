@@ -1,0 +1,12 @@
+apify-client>=1.7
+exa-py>=1.0
+yfinance>=0.2.40
+pandas>=2.0
+numpy>=1.24
+scikit-learn>=1.3
+plotly>=5.18
+pyyaml>=6.0
+python-dotenv>=1.0
+# Optional, better multilingual sentiment (used for the submitted results; ~1.5 GB with the model):
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
+#   pip install "transformers>=4.40" sentencepiece protobuf

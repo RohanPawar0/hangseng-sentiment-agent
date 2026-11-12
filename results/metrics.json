@@ -1,0 +1,61 @@
+{
+  "method": "Ridge on next-bar return (24h-smoothed sentiment; regularisation chosen by time-series CV on training data only), expanding-window walk-forward, pooled tickers",
+  "chosen_alpha_final_model": 151.991,
+  "test_predictions": 140,
+  "mae_model": 0.6483,
+  "mae_naive_baseline": 0.6161,
+  "model_beats_baseline": false,
+  "direction_accuracy": 0.577,
+  "mae_price_only_model": 0.6608,
+  "direction_accuracy_price_only": 0.415,
+  "sentiment_adds_value": true,
+  "share_of_up_bars": 0.415,
+  "direction_accuracy_majority_baseline": 0.585,
+  "mae_return_pct_model": 0.5373,
+  "mae_return_pct_naive": 0.5258,
+  "mae_return_pct_price_only": 0.5507,
+  "test_period_utc": [
+    "2026-11-06 07:30:00+00:00",
+    "2026-11-12 06:30:00+00:00"
+  ],
+  "per_ticker": {
+    "0005.HK": {
+      "test_bars": 28,
+      "mae_model": 0.5884,
+      "mae_naive": 0.5143,
+      "direction_accuracy": 0.6
+    },
+    "0700.HK": {
+      "test_bars": 28,
+      "mae_model": 1.363,
+      "mae_naive": 1.1929,
+      "direction_accuracy": 0.72
+    },
+    "1810.HK": {
+      "test_bars": 28,
+      "mae_model": 0.2013,
+      "mae_naive": 0.1771,
+      "direction_accuracy": 0.462
+    },
+    "3690.HK": {
+      "test_bars": 28,
+      "mae_model": 0.5719,
+      "mae_naive": 0.6143,
+      "direction_accuracy": 0.519
+    },
+    "9988.HK": {
+      "test_bars": 28,
+      "mae_model": 0.5169,
+      "mae_naive": 0.5821,
+      "direction_accuracy": 0.593
+    }
+  },
+  "coefficients_standardised": {
+    "sent_24h": 0.001238,
+    "log_mentions_24h": -0.000605,
+    "sent_w": 0.001382,
+    "ret_0": -0.000225,
+    "ret_1": 0.000482
+  },
+  "note": "Only ~10 days of social data: treat results as a pipeline demonstration, not a trading signal."
+}
